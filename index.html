@@ -1,0 +1,28 @@
+function doGet() {
+  return HtmlService.createHtmlOutputFromFile('Index')
+    .setTitle('F1 Info Solutions - Battery SOP')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function recordAcknowledge(formData) {
+  try {
+    const ssId = "1YkNt7ae701NG6rbXdeJquAVsriRTJSuHYkDUQ3PSWrY";
+    const ss = SpreadsheetApp.openById(ssId);
+    const sheet = ss.getSheetByName("Capture Data");
+    
+    const timestamp = new Date();
+
+    // Appends: Timestamp, Name/Emp ID, Branch, Status
+    sheet.appendRow([
+      timestamp, 
+      formData.userName, 
+      formData.branchName, 
+      "Read & Understood"
+    ]);
+    
+    return "Thank you, " + formData.userName + ". Acknowledgment recorded.";
+  } catch (e) {
+    return "Error: " + e.toString();
+  }
+}

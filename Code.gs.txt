@@ -1,0 +1,29 @@
+/**
+ * Handles POST requests from the Battery Safety Portal website.
+ * Captures technician name, branch, and timestamp.
+ */
+function doPost(e) {
+  try {
+    // Open the specific sheet by its ID
+    var ss = SpreadsheetApp.openById("1YkNt7ae701NG6rbXdeJquAVsriRTJSuHYkDUQ3PSWrY");
+    var sheet = ss.getSheets()[0]; // Targets the first tab
+
+    // Parse the data sent from the website
+    var data = JSON.parse(e.postData.contents);
+    var name = data.name;
+    var branch = data.branch;
+    var timestamp = new Date(); // Generates the current date and time
+
+    // Append the data as a new row: [Timestamp, Technician Name, Branch Name]
+    sheet.appendRow([timestamp, name, branch]);
+
+    // Return a success message
+    return ContentService.createTextOutput("Success")
+                         .setMimeType(ContentService.MimeType.TEXT);
+                         
+  } catch (error) {
+    // Return the error message if something goes wrong
+    return ContentService.createTextOutput("Error: " + error.message)
+                         .setMimeType(ContentService.MimeType.TEXT);
+  }
+}
